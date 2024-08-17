@@ -76,5 +76,4 @@ public function show(?string $slug = null)
             . view('templates/footer');
     }
 }
-}
 
