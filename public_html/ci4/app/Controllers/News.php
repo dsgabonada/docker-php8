@@ -7,7 +7,43 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 
 class News extends BaseController
 {
-    // ...
+   public function index()
+   {
+    $model = model(NewsModel::class);
+
+    $data = [
+        'news_list' => $model->getNews(),
+        'title'     => 'News archive',
+    ];
+
+    return view ('templates/header', $data)
+        . view('news/create')
+        . view('templates/footer');
+
+}
+
+public function show(?string $slug = null)
+{
+    $model = model(NewsModel::class);
+
+    $data['News'] = $model->getHews($slug);
+
+    if($data['news'] === null) {
+        throw new PageNotFoundException('Cannot find the news item:' . $slug);
+    }
+    $data['title'] = $data['news']['title'];
+    return view('templates/header', $data)
+        . view('news/create')
+        . view('templates/footer');
+}
+
+    public function new()
+    {
+        helper('form');
+        return view('templates/header', ['title' => 'Create a news item'])
+        . view('news/create')
+        . view('templates/footer');
+    }
 
     public function create()
     {
@@ -39,12 +75,6 @@ class News extends BaseController
             . view('news/success')
             . view('templates/footer');
     }
-
-    public function new()
-    {
-        helper('form');
-        return view('templates/header', ['title' => 'Create a news item'])
-        . view('news/create')
-        . view('templates/footer');
-    }
 }
+}
+
